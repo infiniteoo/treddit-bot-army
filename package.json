@@ -1,0 +1,23 @@
+{
+  "name": "treddit-bot-army",
+  "version": "1.0.0",
+  "description": "Troy's Reddit Bot Army Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infiniteoo/treddit-bot-army.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/infiniteoo/treddit-bot-army/issues"
+  },
+  "homepage": "https://github.com/infiniteoo/treddit-bot-army#readme",
+  "dependencies": {
+    "snoowrap": "^1.21.0"
+  }
+}
