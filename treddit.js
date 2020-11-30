@@ -1,10 +1,30 @@
 const snoowrap = require('snoowrap');
+var [userId, secretId, username, password] = [""];
 
 const fs = require('fs');
 
+function Soldier(userId, secretId, username, password) {
+    this.userId = userId,
+        this.secretId = secretId,
+        this.username = username,
+        this.password = password
+}
+
 fs.readFile('army-roster.txt', 'utf8', function (err, data) {
-    let db = data.split(",");
-    console.log(db);
+
+    if (err === null) {
+
+        let db = data.split(",");
+        let fighter = new Soldier(db[0], db[1], db[2], db[3]);
+
+        console.log(`
+        userid: ${fighter.userId}
+        secretid: ${fighter.secretId}
+        username: ${fighter.username}
+        password: ${fighter.password}`);
+
+    }
+
 
 });
 
