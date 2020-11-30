@@ -1,13 +1,22 @@
 const snoowrap = require('snoowrap');
-var [userId, secretId, username, password] = [""];
-
 const fs = require('fs');
 
-function Soldier(userId, secretId, username, password) {
-    this.userId = userId,
-        this.secretId = secretId,
-        this.username = username,
-        this.password = password
+
+class Soldier {
+    constructor(userId, secretId, username, password) {
+        this.userId = userId,
+            this.secretId = secretId,
+            this.username = username,
+            this.password = password,
+            this.useragent = generateRandomAgent()
+    }
+}
+
+function generateRandomAgent(){
+
+    let randoNum = Math.floor((Math.random() * 1000) + 1);
+    return(`user-agent-${randoNum}`);
+
 }
 
 fs.readFile('army-roster.txt', 'utf8', function (err, data) {
@@ -21,7 +30,8 @@ fs.readFile('army-roster.txt', 'utf8', function (err, data) {
         userid: ${fighter.userId}
         secretid: ${fighter.secretId}
         username: ${fighter.username}
-        password: ${fighter.password}`);
+        password: ${fighter.password}
+        user-agent: ${fighter.useragent}`);
 
     }
 
