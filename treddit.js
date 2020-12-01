@@ -1,8 +1,10 @@
 const snoowrap = require('snoowrap');
 const fs = require('fs');
 const platoon = [];
+const inq = require("inquirer");
 
 
+init();
 
 
 class Soldier {
@@ -12,33 +14,73 @@ class Soldier {
             this.username = username,
             this.password = password,
             this.useragent = generateRandomAgent()
-    }
-}
+    };
+};
 
 function generateRandomAgent() {
 
     let randoNum = Math.floor((Math.random() * 1000) + 1);
     return (`user-agent-${randoNum}`);
-
-}
-
-fs.readFile('army-roster.json', 'utf8', function (err, data) {
-
-    if (err === null) {
-       let db = JSON.parse(data);
-
-       console.log(db);
-
-
-    }
+};
 
 
 
+function init() {
 
-});
+    clearScreen();
+    openDatabase('army-roster.json');
+
+};
+
+function clearScreen() {
+
+    console.log('\033[2J');
+
+};
+
+function openDatabase(filename) {
+    fs.readFile(filename, 'utf8', (err, data) => {
+
+        if (err === null) {
+            displayMainMenu(JSON.parse(data));
+
+        };
+    });
+};
+
+
+function displayMainMenu(database) {
+    const m = require("./mainmenu");
+    inq.prompt(m)
+        .then(answer => {
+
+            switch (answer) {
+
+
+                case "Add A Soldier":
+
+                    break;
+
+                case "Display Platoon":
+
+                    break;
+
+                case "Upvote Post":
+
+                    break;
+
+                case "Quit":
+                    process.exit();
+            }
+
+
+
+
+        });
+};
+
 
 function draftSoldiers(db) {
-
 
     db.forEach(function (index) {
 
@@ -60,13 +102,8 @@ function draftSoldiers(db) {
         if (err) throw err;
         console.log('written');
 
-    })
-
-}
-
-
-
-
+    });
+};
 
 
 /* const r = new snoowrap({
