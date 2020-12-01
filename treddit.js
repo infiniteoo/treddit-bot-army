@@ -1,6 +1,6 @@
 const snoowrap = require('snoowrap');
 const fs = require('fs');
-const platoon = [];
+let platoon = [];
 const inq = require("inquirer");
 
 
@@ -18,7 +18,6 @@ class Soldier {
 };
 
 function generateRandomAgent() {
-
     let randoNum = Math.floor((Math.random() * 1000) + 1);
     return (`user-agent-${randoNum}`);
 };
@@ -28,7 +27,7 @@ function generateRandomAgent() {
 function init() {
 
     clearScreen();
-    openDatabase('army-roster.json');
+    initDatabase();
 
 };
 
@@ -38,15 +37,28 @@ function clearScreen() {
 
 };
 
-function openDatabase(filename) {
-    fs.readFile(filename, 'utf8', (err, data) => {
-
+function initDatabase() {
+    fs.readFile('army-roster.json', 'utf8', (err, data) => {
         if (err === null) {
-            displayMainMenu(JSON.parse(data));
-
+            platoon = buildPlatoon(JSON.parse(data));
+            displayMainMenu();
         };
     });
 };
+
+function buildPlatoon(recruits) {
+    recruits.forEach(index => {
+        let fighter = new Soldier(
+            index.userId,
+            index.secretId,
+            index.username,
+            index.password
+        );
+        platoon.push(fighter);
+    });
+    return platoon;
+};
+
 
 
 function displayMainMenu(database) {
@@ -54,8 +66,7 @@ function displayMainMenu(database) {
     inq.prompt(m)
         .then(answer => {
 
-            switch (answer) {
-
+            switch (answer.mainMenu) {
 
                 case "Add A Soldier":
 
@@ -63,6 +74,8 @@ function displayMainMenu(database) {
 
                 case "Display Platoon":
 
+                    displayDatabase();
+                    displayMainMenu();
                     break;
 
                 case "Upvote Post":
@@ -72,39 +85,33 @@ function displayMainMenu(database) {
                 case "Quit":
                     process.exit();
             }
-
-
-
-
         });
 };
 
+function displayDatabase() {
 
-function draftSoldiers(db) {
-
-    db.forEach(function (index) {
-
-        let pieces = index.split(",");
-        let fighter = new Soldier(pieces[0], pieces[1], pieces[2], pieces[3]);
+    platoon.forEach(index => {
 
         console.log(`
-        userid: ${fighter.userId}
-        secretid: ${fighter.secretId}
-        username: ${fighter.username}
-        password: ${fighter.password}
-        user-agent: ${fighter.useragent}`);
-
-        platoon.push(fighter);
+        userid: ${index.userId}
+        secretid: ${index.secretId}
+        username: ${index.username}
+        password: ${index.password}
+        user-agent: ${index.useragent}`);
     });
 
-    fs.writeFile("test.json", JSON.stringify(platoon, null, 2), function (err) {
+
+};
+
+
+function writeDatabase() {
+    fs.writeFile("army-roster.json", JSON.stringify(platoon, null, 2), function (err) {
 
         if (err) throw err;
         console.log('written');
 
     });
-};
-
+}
 
 /* const r = new snoowrap({
     userAgent: fighter.useragent,
