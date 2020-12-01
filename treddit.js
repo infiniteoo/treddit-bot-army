@@ -2,6 +2,7 @@ const snoowrap = require('snoowrap');
 const fs = require('fs');
 let platoon = [];
 const inq = require("inquirer");
+const inq2 = require("inquirer");
 
 
 init();
@@ -47,29 +48,56 @@ function initDatabase() {
 };
 
 function buildPlatoon(recruits) {
-    recruits.forEach(index => {
-        let fighter = new Soldier(
-            index.userId,
-            index.secretId,
-            index.username,
-            index.password
-        );
-        platoon.push(fighter);
+    recruits.forEach(recruit => {
+
+        let soldier = buildSoldier(recruit);
+
+        platoon.push(soldier);
     });
     return platoon;
 };
 
+function buildSoldier(recruit) {
+    let soldier = new Soldier(
+        recruit.userId,
+        recruit.secretId,
+        recruit.username,
+        recruit.password
+    );
 
+    return soldier;
 
-function displayMainMenu(database) {
-    const m = require("./mainmenu");
+};
+
+function displayAddASoldierMenu() {
+
+    console.log("Upvote Army | Add a Soldier");
+    const x = require('./menus/soldiermenu');
+    inq2
+        .prompt(x)
+        .then(answers => {
+            let soldier = buildSoldier({
+                userId: answers.userIdInput,
+                secretId: answers.secretIdInput,
+                username: answers.usernameInput,
+                password: answers.passwordInput
+            });
+            platoon.push(soldier);
+            console.log('Soldier added to database.');
+            displayMainMenu();
+        });
+
+};
+
+function displayMainMenu() {
+    const m = require("./menus/mainmenu");
     inq.prompt(m)
         .then(answer => {
 
             switch (answer.mainMenu) {
 
                 case "Add A Soldier":
-
+                    displayAddASoldierMenu();
                     break;
 
                 case "Display Platoon":
@@ -84,9 +112,13 @@ function displayMainMenu(database) {
 
                 case "Quit":
                     process.exit();
-            }
+            };
         });
 };
+
+
+
+
 
 function displayDatabase() {
 
@@ -98,9 +130,8 @@ function displayDatabase() {
         username: ${index.username}
         password: ${index.password}
         user-agent: ${index.useragent}`);
+
     });
-
-
 };
 
 
